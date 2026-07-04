@@ -28,6 +28,12 @@ const round = (n) => Math.round(n * 100) / 100
 server.use(middlewares)
 server.use(jsonServer.bodyParser)
 
+// 0) Health check — no auth, no latency. Used by Render's health check and by
+//    uptime pingers to keep the free instance warm.
+server.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() })
+})
+
 // 1) Artificial latency on every request ------------------------------------
 server.use((req, res, next) => {
   const delay = LATENCY_MIN + Math.random() * Math.max(0, LATENCY_MAX - LATENCY_MIN)

@@ -1,0 +1,31 @@
+# Render Blueprint for the Foolix mock API.
+# https://render.com/docs/blueprint-spec
+#
+# One-click deploy: Render Dashboard -> New -> Blueprint -> pick the repo.
+# Render reads this file, provisions the service, and deploys.
+#
+# NOTE ON REPO LAYOUT:
+#   render.yaml must sit at the REPO ROOT.
+#   - If `foolix-mock-api/` is its own repo, this file is already at the root — nothing to do.
+#   - If it's a subfolder of a monorepo, move this file to the repo root and
+#     uncomment `rootDir: foolix-mock-api` below.
+#
+# PER-TEAM: change `name` (e.g. foolix-mock-team-a) and deploy the blueprint
+# once per team to get an isolated URL + data sandbox each.
+
+services:
+  - type: web
+    name: foolix-mock-api
+    runtime: node
+    plan: free
+    # rootDir: foolix-mock-api   # uncomment if this repo is a monorepo
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: TAX_RATE
+        value: "0.14"
+      - key: FAIL_RATE
+        value: "0"     # set to e.g. 0.1 to inject ~10% write failures
+      # PORT is injected by Render automatically — do not set it here.

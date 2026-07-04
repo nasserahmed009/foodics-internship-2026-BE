@@ -32,6 +32,7 @@ returned otherwise).
 ## Endpoints
 
 ```
+GET    /health                -> { status: "ok", uptime }   (no auth)
 POST   /login                 -> { token, user: { id, name, email, role } }
 GET    /categories
 GET    /products              ?categoryId=&available=&q=&_page=&_limit=&_sort=&_order=
@@ -84,13 +85,20 @@ Example: `FAIL_RATE=0.1 npm start`
 
 ## Deploying (optional) — Render
 
-For an isolated instance per team, deploy this repo as a **Render Web Service** (one per team):
+This folder ships a `render.yaml` Blueprint and a `/health` check, so it's deploy-ready.
 
-1. Push this folder to a GitHub repo.
-2. Render → **New → Web Service** → connect the repo.
-3. Build command `npm install`, start command `npm start`, Free instance.
-4. Use the resulting URL (e.g. `https://foolix-mock-team-a.onrender.com`) as the team's API base.
+**Blueprint (recommended):** push to GitHub, then Render → **New → Blueprint** → pick the repo.
+Render reads `render.yaml`, provisions a Free web service, runs `npm install` / `npm start`, and
+health-checks `/health`. (`render.yaml` must be at the repo root — if this is a subfolder of a
+monorepo, move it to the root and uncomment `rootDir: foolix-mock-api`.)
 
-Notes: the free tier sleeps after ~15 min idle (first request is slow), and the filesystem is
-ephemeral — `db.json` resets on redeploy/restart. For a mock, that's usually fine. See
-`../MOCK_BACKEND.md` for the full hosting rationale and alternatives.
+**Manual:** New → Web Service → connect repo → Build `npm install`, Start `npm start`, Free
+instance, Health Check Path `/health`.
+
+**Per team:** deploy one service per team (change `name` in `render.yaml`, e.g.
+`foolix-mock-team-a`) so each gets its own URL + data sandbox. Use the resulting URL as the team's
+API base.
+
+Notes: the free tier sleeps after ~15 min idle (first request is slow — ping `/health` to keep it
+warm), and the filesystem is ephemeral — `db.json` resets on redeploy/restart. For a mock, that's
+usually fine. See `../MOCK_BACKEND.md` for the full hosting rationale and alternatives.
