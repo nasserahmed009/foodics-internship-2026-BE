@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <radialGradient id="g" cx="32%" cy="30%" r="85%">
+      <stop offset="0" stop-color="#7fa15b"/>
+      <stop offset="1" stop-color="#435A2C"/>
+    </radialGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#g)"/>
+  <text x="16" y="23" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+        font-size="21" font-weight="800" fill="#fff" text-anchor="middle">F</text>
+</svg>
