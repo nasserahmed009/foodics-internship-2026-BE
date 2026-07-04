@@ -127,7 +127,7 @@ server.post('/orders', (req, res, next) => {
 server.use(router)
 
 server.listen(PORT, () => {
-  console.log(`\n🫘  Foolix mock API running at http://localhost:${PORT}`)
-  console.log(`    tax rate ${TAX_RATE * 100}% · latency ${LATENCY_MIN}-${LATENCY_MAX}ms · fail rate ${FAIL_RATE}`)
+  console.log(`\n🫘  Foolix mock API listening on port ${PORT} (local: http://localhost:${PORT})`)
+  console.log(`    tax ${+(TAX_RATE * 100).toFixed(2)}% · latency ${LATENCY_MIN}-${LATENCY_MAX}ms · fail rate ${FAIL_RATE}`)
   console.log(`    logins: cashier@foolix.test (cashier) · admin@foolix.test (admin) — any non-empty password\n`)
 })
