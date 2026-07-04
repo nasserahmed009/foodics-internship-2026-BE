@@ -1,0 +1,753 @@
+<title>Foolix Mock API — Reference</title>
+<style>
+  :root {
+    --paper: #FBF8F1;
+    --surface: #FFFDF8;
+    --ink: #231F19;
+    --muted: #6E6658;
+    --line: #EAE2D3;
+    --line-soft: #F0EADD;
+    --accent: #5E7B3E;
+    --accent-deep: #435A2C;
+    --code-bg: #262019;
+    --code-ink: #ECE4D5;
+    --get: #2E7D57;
+    --post: #A96A18;
+    --patch: #3C6CA6;
+    --delete: #B23A38;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sidebar-w: 264px;
+    --maxw: 820px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-deep); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code { font-family: var(--mono); }
+
+  /* ---- Layout ---- */
+  .shell { display: flex; align-items: flex-start; }
+  .sidebar {
+    width: var(--sidebar-w);
+    flex: 0 0 var(--sidebar-w);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid var(--line);
+    background: var(--surface);
+    padding: 22px 16px 40px;
+  }
+  .content { flex: 1 1 auto; min-width: 0; padding: 40px clamp(20px, 5vw, 64px) 120px; }
+  .inner { max-width: var(--maxw); margin: 0 auto; }
+
+  /* ---- Sidebar brand + nav ---- */
+  .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 18px; }
+  .brand .glyph {
+    width: 30px; height: 30px; border-radius: 9px;
+    background: radial-gradient(circle at 32% 30%, #7fa15b, var(--accent-deep));
+    display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 15px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+  }
+  .brand b { font-size: 15px; letter-spacing: -0.01em; }
+  .brand span { display: block; font-size: 11.5px; color: var(--muted); font-weight: 500; }
+
+  .filter {
+    width: 100%; padding: 8px 11px; margin: 0 0 16px;
+    border: 1px solid var(--line); border-radius: 9px; background: var(--paper);
+    font: inherit; font-size: 13.5px; color: var(--ink);
+  }
+  .filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  .navgroup { margin-bottom: 15px; }
+  .navgroup > p {
+    margin: 0 0 5px; padding: 0 8px;
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sidebar a.navlink {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 8px; border-radius: 7px;
+    color: var(--ink); font-size: 13.5px; line-height: 1.3;
+  }
+  .sidebar a.navlink:hover { background: var(--line-soft); text-decoration: none; }
+  .sidebar a.navlink.active { background: #EAF0E0; color: var(--accent-deep); font-weight: 600; }
+  .navlink .tag {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+    padding: 1px 5px; border-radius: 5px; letter-spacing: 0.03em;
+    color: #fff; flex: 0 0 auto;
+  }
+  .tag.get { background: var(--get); } .tag.post { background: var(--post); }
+  .tag.patch { background: var(--patch); } .tag.del { background: var(--delete); }
+
+  /* ---- Headings / prose ---- */
+  h1 { font-size: 34px; letter-spacing: -0.02em; margin: 0 0 6px; text-wrap: balance; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-deep);
+       margin: 0 0 18px; padding-bottom: 9px; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 21px; letter-spacing: -0.01em; margin: 0; }
+  .lede { font-size: 17px; color: var(--muted); max-width: 62ch; margin: 0 0 30px; }
+  p { max-width: 66ch; }
+  section { scroll-margin-top: 20px; margin-bottom: 56px; }
+  .subhead { margin: 34px 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+
+  /* ---- Endpoint card ---- */
+  .endpoint { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow: hidden; margin-bottom: 26px; }
+  .ep-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 15px 18px; border-bottom: 1px solid var(--line-soft); }
+  .ep-head .path { font-family: var(--mono); font-size: 15px; font-weight: 600; word-break: break-all; }
+  .ep-body { padding: 6px 18px 20px; }
+  .ep-desc { color: var(--muted); margin: 12px 0 0; }
+
+  .method {
+    font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+    color: #fff; padding: 3px 9px; border-radius: 7px; flex: 0 0 auto;
+  }
+  .method.get { background: var(--get); } .method.post { background: var(--post); }
+  .method.patch { background: var(--patch); } .method.del { background: var(--delete); }
+  .auth-chip {
+    margin-left: auto; font-size: 11px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 20px; padding: 2px 10px; white-space: nowrap;
+  }
+  .auth-chip b { color: var(--ink); font-weight: 600; }
+
+  /* ---- Code blocks ---- */
+  .code { position: relative; margin: 12px 0 0; }
+  .code pre {
+    margin: 0; background: var(--code-bg); color: var(--code-ink);
+    border-radius: 11px; padding: 15px 16px; overflow-x: auto;
+    font-family: var(--mono); font-size: 13px; line-height: 1.65;
+    tab-size: 2;
+  }
+  .code pre code { color: inherit; font-size: inherit; white-space: pre; }
+  .copy {
+    position: absolute; top: 9px; right: 9px;
+    background: rgba(255,255,255,.08); color: var(--code-ink);
+    border: 1px solid rgba(255,255,255,.16); border-radius: 7px;
+    font: inherit; font-size: 11px; padding: 3px 9px; cursor: pointer;
+    opacity: 0; transition: opacity .12s;
+  }
+  .code:hover .copy, .copy:focus-visible { opacity: 1; }
+  .copy:hover { background: rgba(255,255,255,.16); }
+  .copy.done { color: #bfe0a8; border-color: #6f8e50; }
+  .clabel { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin: 16px 0 0; }
+
+  /* ---- Tables ---- */
+  .twrap { overflow-x: auto; margin-top: 12px; border: 1px solid var(--line); border-radius: 11px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); background: var(--paper); }
+  tr:last-child td { border-bottom: 0; }
+  td code, .inline { font-family: var(--mono); font-size: 12.5px; background: var(--line-soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+  td:last-child { color: var(--muted); }
+  .req { color: var(--delete); font-weight: 700; font-size: 11px; }
+
+  /* ---- Status pills (for the enum reference) ---- */
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .pill { font-size: 12.5px; font-weight: 600; padding: 3px 11px; border-radius: 20px; font-family: var(--mono); }
+  .pill.pending { background: #F6EBCB; color: #8a6206; }
+  .pill.preparing { background: #DCE6F7; color: #2C5AA8; }
+  .pill.ready { background: #D6EDDF; color: #226b46; }
+  .pill.completed { background: #EAE2D3; color: #6E6658; }
+  .pill.cancelled { background: #F4D9D6; color: #a53330; }
+
+  /* ---- Callout ---- */
+  .note {
+    border-left: 3px solid var(--accent); background: #F2F5EB;
+    border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 16px 0 0;
+    font-size: 14.5px; color: #40492f;
+  }
+  .note b { color: var(--accent-deep); }
+
+  .kv { display: flex; flex-wrap: wrap; gap: 10px 30px; margin: 4px 0 0; padding: 0; list-style: none; }
+  .kv li { font-size: 14px; }
+  .kv b { font-family: var(--mono); font-size: 13px; }
+
+  .topbar { display: none; }
+  @media (max-width: 860px) {
+    .sidebar { position: fixed; z-index: 40; left: 0; top: 0; transform: translateX(-100%); transition: transform .2s; box-shadow: 0 0 40px rgba(0,0,0,.15); }
+    .sidebar.open { transform: translateX(0); }
+    .topbar { display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 30;
+      background: var(--surface); border-bottom: 1px solid var(--line); padding: 12px 18px; }
+    .topbar button { font: inherit; font-size: 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+    .content { padding-top: 24px; }
+  }
+</style>
+
+<div class="topbar">
+  <button id="menuBtn" aria-label="Toggle navigation">☰ Menu</button>
+  <b>Foolix Mock API</b>
+</div>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar" aria-label="API sections">
+    <div class="brand">
+      <span class="glyph">F</span>
+      <b>Foolix Mock API<span>Reference · v1</span></b>
+    </div>
+    <input class="filter" id="filter" type="search" placeholder="Filter endpoints…" aria-label="Filter endpoints" />
+
+    <div class="navgroup" data-static>
+      <p>Start here</p>
+      <a class="navlink" href="#overview">Overview</a>
+      <a class="navlink" href="#auth-guard">Authentication</a>
+      <a class="navlink" href="#models">Data types</a>
+      <a class="navlink" href="#errors">Errors</a>
+      <a class="navlink" href="#config">Configuration</a>
+    </div>
+
+    <div class="navgroup">
+      <p>Auth</p>
+      <a class="navlink" href="#post-login" data-ep><span class="tag post">POST</span> /login</a>
+    </div>
+    <div class="navgroup">
+      <p>Categories</p>
+      <a class="navlink" href="#get-categories" data-ep><span class="tag get">GET</span> /categories</a>
+    </div>
+    <div class="navgroup">
+      <p>Products</p>
+      <a class="navlink" href="#get-products" data-ep><span class="tag get">GET</span> /products</a>
+      <a class="navlink" href="#get-product" data-ep><span class="tag get">GET</span> /products/:id</a>
+      <a class="navlink" href="#patch-product" data-ep><span class="tag patch">PATCH</span> /products/:id</a>
+    </div>
+    <div class="navgroup">
+      <p>Orders</p>
+      <a class="navlink" href="#post-orders" data-ep><span class="tag post">POST</span> /orders</a>
+      <a class="navlink" href="#get-orders" data-ep><span class="tag get">GET</span> /orders</a>
+      <a class="navlink" href="#get-order" data-ep><span class="tag get">GET</span> /orders/:id</a>
+      <a class="navlink" href="#patch-order" data-ep><span class="tag patch">PATCH</span> /orders/:id</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <div class="inner">
+
+      <!-- OVERVIEW -->
+      <section id="overview">
+        <h1>Foolix Mock API</h1>
+        <p class="lede">The backend for the Foolix ordering app — a foul &amp; ta3meya restaurant. This reference lists every endpoint, its request and response shapes, and the types of every model.</p>
+        <h2>Overview</h2>
+        <ul class="kv">
+          <li>Base URL &nbsp;<b class="inline">http://localhost:4000</b></li>
+          <li>Format &nbsp;<b class="inline">application/json</b></li>
+          <li>Currency &nbsp;<b>EGP</b></li>
+          <li>Tax &nbsp;<b>14% VAT</b></li>
+        </ul>
+        <p style="margin-top:18px">Send and receive JSON. Set <span class="inline">Content-Type: application/json</span> on requests with a body. Every endpoint <b>except</b> <a href="#post-login">POST&nbsp;/login</a> requires a bearer token — see below. List endpoints support filtering, search, sorting and pagination via query parameters (documented per endpoint).</p>
+        <div class="note">This is a <b>mock</b> server (json-server). It persists to a file, adds artificial latency, and can inject random failures — it's built to make the frontend handle real-world states (loading, empty, error), not to be a production backend.</div>
+      </section>
+
+      <!-- AUTH -->
+      <section id="auth-guard">
+        <h2>Authentication</h2>
+        <p>Call <a href="#post-login">POST&nbsp;/login</a> to get a token, then send it on every other request:</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>Authorization: Bearer &lt;token&gt;</code></pre></div>
+        <p style="margin-top:16px">Requests without a valid bearer token get <span class="inline">401 Unauthorized</span>. The token is a fake JWT — the mock doesn't verify signatures, it only checks the header is present. Two seed users exist (any non-empty password works):</p>
+        <div class="twrap">
+          <table>
+            <thead><tr><th>Email</th><th>Role</th><th>Lands on</th></tr></thead>
+            <tbody>
+              <tr><td><code>cashier@foolix.test</code></td><td><span class="pill ready">cashier</span></td><td>Cashier / POS area</td></tr>
+              <tr><td><code>admin@foolix.test</code></td><td><span class="pill preparing">admin</span></td><td>Operations Dashboard</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:14px">The frontend reads <span class="inline">user.role</span> from the login response and redirects accordingly.</p>
+      </section>
+
+      <!-- MODELS -->
+      <section id="models">
+        <h2>Data types</h2>
+        <p>The app is written in JavaScript; the shapes below are written as TypeScript-style interfaces purely to document each model precisely.</p>
+
+        <p class="subhead">Enums</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>type Role        = "cashier" | "admin"
+type OrderType   = "dine_in" | "takeaway" | "delivery"
+type OrderStatus = "pending" | "preparing" | "ready" | "completed" | "cancelled"</code></pre></div>
+        <div class="pills">
+          <span class="pill pending">pending</span>
+          <span class="pill preparing">preparing</span>
+          <span class="pill ready">ready</span>
+          <span class="pill completed">completed</span>
+          <span class="pill cancelled">cancelled</span>
+        </div>
+        <div class="note">Order status normally advances <b>pending → preparing → ready → completed</b> (or → <b>cancelled</b>). The mock accepts any status via PATCH; the frontend enforces the allowed flow.</div>
+
+        <p class="subhead">User</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>interface User {
+  id: number
+  name: string
+  email: string
+  role: Role
+}</code></pre></div>
+
+        <p class="subhead">Category</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>interface Category {
+  id: number
+  name: string        // e.g. "Foul"
+  nameAr: string      // Arabic name, e.g. "فول"
+  sortOrder: number
+}</code></pre></div>
+
+        <p class="subhead">Modifier &amp; Product</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>interface Modifier {
+  id: number
+  name: string        // "Extra tahini"
+  price: number       // added to the item price; can be 0
+}
+
+interface Product {
+  id: number
+  name: string
+  nameAr: string
+  description: string
+  price: number       // base price in EGP
+  categoryId: number  // -> Category.id
+  imageUrl: string
+  available: boolean
+  modifiers: Modifier[]
+}</code></pre></div>
+
+        <p class="subhead">Order &amp; OrderItem</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>interface OrderItem {
+  productId: number
+  name: string
+  qty: number
+  unitPrice: number                          // base product price
+  modifiers: { name: string; price: number }[]
+  lineTotal: number                          // (unitPrice + Σ modifier.price) × qty  — computed by the server
+}
+
+interface Customer {
+  name: string
+  phone: string
+  address?: string
+}
+
+interface Order {
+  id: number
+  number: number         // 4-digit human-facing number, e.g. 1042
+  status: OrderStatus
+  type: OrderType
+  table: number | null   // set for dine_in
+  customer: Customer | null   // set for delivery
+  items: OrderItem[]
+  subtotal: number       // Σ lineTotal        — computed
+  tax: number            // subtotal × 14%     — computed
+  total: number          // subtotal + tax     — computed
+  notes: string
+  createdAt: string      // ISO timestamp
+}</code></pre></div>
+
+        <p class="subhead">Login response</p>
+        <div class="code"><button class="copy">Copy</button><pre><code>interface LoginResponse {
+  token: string
+  user: User
+}</code></pre></div>
+      </section>
+
+      <!-- ============ ENDPOINTS ============ -->
+      <section id="endpoints-auth">
+        <h2>Endpoints · Auth</h2>
+
+        <article class="endpoint" id="post-login">
+          <div class="ep-head">
+            <span class="method post">POST</span>
+            <span class="path">/login</span>
+            <span class="auth-chip">Auth: <b>none</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">Exchange credentials for a token and the signed-in user (with role). Any non-empty password is accepted for a known seed email.</p>
+            <span class="clabel">Request body</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "email": "cashier@foolix.test",
+  "password": "demo"
+}</code></pre></div>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "token": "fake-jwt.1.1783175087704",
+  "user": {
+    "id": 1,
+    "name": "Sara Adel",
+    "email": "cashier@foolix.test",
+    "role": "cashier"
+  }
+}</code></pre></div>
+            <span class="clabel">401 · Unknown email or empty password</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{ "message": "Invalid email or password" }</code></pre></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="endpoints-categories">
+        <h2>Endpoints · Categories</h2>
+
+        <article class="endpoint" id="get-categories">
+          <div class="ep-head">
+            <span class="method get">GET</span>
+            <span class="path">/categories</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">All menu categories, for the category rail / tabs.</p>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>[
+  { "id": 1, "name": "Foul", "nameAr": "فول", "sortOrder": 1 },
+  { "id": 2, "name": "Ta3meya", "nameAr": "طعمية", "sortOrder": 2 },
+  { "id": 3, "name": "Sandwiches", "nameAr": "ساندويتشات", "sortOrder": 3 }
+]</code></pre></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="endpoints-products">
+        <h2>Endpoints · Products</h2>
+
+        <article class="endpoint" id="get-products">
+          <div class="ep-head">
+            <span class="method get">GET</span>
+            <span class="path">/products</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">List products. Combine any query parameters below.</p>
+            <span class="clabel">Query parameters</span>
+            <div class="twrap"><table>
+              <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>categoryId</code></td><td>number</td><td>Only products in this category.</td></tr>
+                <tr><td><code>available</code></td><td>boolean</td><td>Filter by availability, e.g. <code>available=true</code>.</td></tr>
+                <tr><td><code>q</code></td><td>string</td><td>Full-text search across fields.</td></tr>
+                <tr><td><code>_page</code>&nbsp;/&nbsp;<code>_limit</code></td><td>number</td><td>Pagination. Response includes an <code>X-Total-Count</code> header.</td></tr>
+                <tr><td><code>_sort</code>&nbsp;/&nbsp;<code>_order</code></td><td>string</td><td>Sort field and <code>asc</code>/<code>desc</code>.</td></tr>
+              </tbody>
+            </table></div>
+            <span class="clabel">Example request</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>GET /products?categoryId=1&amp;available=true</code></pre></div>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>[
+  {
+    "id": 1,
+    "name": "Foul Eskandarani",
+    "nameAr": "فول اسكندراني",
+    "description": "Alexandrian-style foul simmered with tomato, garlic and cumin.",
+    "price": 25,
+    "categoryId": 1,
+    "imageUrl": "https://picsum.photos/seed/foul-eskandarani/400/300",
+    "available": true,
+    "modifiers": [
+      { "id": 1, "name": "Extra tahini", "price": 5 },
+      { "id": 2, "name": "Add egg", "price": 8 },
+      { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+    ]
+  }
+]</code></pre></div>
+          </div>
+        </article>
+
+        <article class="endpoint" id="get-product">
+          <div class="ep-head">
+            <span class="method get">GET</span>
+            <span class="path">/products/:id</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">A single product by id. Returns <span class="inline">404</span> if it doesn't exist.</p>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "id": 4,
+  "name": "Ta3meya — 5 pieces",
+  "nameAr": "طعمية - ٥ قطع",
+  "description": "Crispy Egyptian falafel made with fava beans and herbs.",
+  "price": 20,
+  "categoryId": 2,
+  "imageUrl": "https://picsum.photos/seed/ta3meya-plate/400/300",
+  "available": true,
+  "modifiers": [
+    { "id": 3, "name": "Extra piece", "price": 4 },
+    { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+  ]
+}</code></pre></div>
+          </div>
+        </article>
+
+        <article class="endpoint" id="patch-product">
+          <div class="ep-head">
+            <span class="method patch">PATCH</span>
+            <span class="path">/products/:id</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">Partial update — used by the dashboard's menu management to toggle availability or edit price/name. Send only the fields you're changing.</p>
+            <span class="clabel">Request body</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{ "available": false }</code></pre></div>
+            <span class="clabel">Request body · edit price &amp; name</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{ "price": 22, "name": "Ta3meya — 6 pieces" }</code></pre></div>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "id": 4,
+  "name": "Ta3meya — 6 pieces",
+  "price": 22,
+  "available": false,
+  "categoryId": 2,
+  "modifiers": [ /* … unchanged fields returned too … */ ]
+}</code></pre></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="endpoints-orders">
+        <h2>Endpoints · Orders</h2>
+
+        <article class="endpoint" id="post-orders">
+          <div class="ep-head">
+            <span class="method post">POST</span>
+            <span class="path">/orders</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">Create an order. <b>Send items only</b> — the server computes each <code>lineTotal</code>, the <code>subtotal</code>, <code>tax</code> and <code>total</code>, assigns the order <code>number</code>, sets <code>status: "pending"</code> and <code>createdAt</code>. Any totals you send are ignored, so always read them back from the response.</p>
+            <span class="clabel">Request body</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "type": "dine_in",
+  "table": 9,
+  "notes": "Extra napkins please",
+  "items": [
+    {
+      "productId": 1,
+      "name": "Foul Eskandarani",
+      "qty": 2,
+      "unitPrice": 25,
+      "modifiers": [
+        { "name": "Extra tahini", "price": 5 },
+        { "name": "Add egg", "price": 8 }
+      ]
+    },
+    { "productId": 12, "name": "Tea", "qty": 1, "unitPrice": 8, "modifiers": [] }
+  ]
+}</code></pre></div>
+            <div class="note">For <b>delivery</b> orders send a <span class="inline">customer</span> object instead of <span class="inline">table</span>:
+              <div class="code" style="margin-top:8px"><button class="copy">Copy</button><pre><code>"type": "delivery",
+"customer": { "name": "Nadia M.", "phone": "0100-123-4567", "address": "12 El Nasr St, Cairo" }</code></pre></div>
+            </div>
+            <span class="clabel">Request fields</span>
+            <div class="twrap"><table>
+              <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr><td><code>items</code> <span class="req">required</span></td><td>OrderItem[]</td><td>Must contain at least one item; each needs <code>productId</code>, <code>qty &gt; 0</code>, <code>unitPrice</code>.</td></tr>
+                <tr><td><code>type</code></td><td>OrderType</td><td>Defaults to <code>takeaway</code>. Must be a valid type.</td></tr>
+                <tr><td><code>table</code></td><td>number</td><td>For dine-in.</td></tr>
+                <tr><td><code>customer</code></td><td>Customer</td><td>For delivery.</td></tr>
+                <tr><td><code>notes</code></td><td>string</td><td>Optional order note.</td></tr>
+              </tbody>
+            </table></div>
+            <span class="clabel">201 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "number": 1048,
+  "status": "pending",
+  "type": "dine_in",
+  "table": 9,
+  "customer": null,
+  "items": [
+    { "productId": 1, "name": "Foul Eskandarani", "qty": 2, "unitPrice": 25,
+      "modifiers": [ { "name": "Extra tahini", "price": 5 }, { "name": "Add egg", "price": 8 } ],
+      "lineTotal": 76 },
+    { "productId": 12, "name": "Tea", "qty": 1, "unitPrice": 8, "modifiers": [], "lineTotal": 8 }
+  ],
+  "subtotal": 84,
+  "tax": 11.76,
+  "total": 95.76,
+  "notes": "Extra napkins please",
+  "createdAt": "2026-07-04T09:31:00.000Z",
+  "id": 7
+}</code></pre></div>
+            <span class="clabel">400 · Validation errors</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{ "message": "An order must contain at least one item." }
+{ "message": "Each item needs a productId, a qty > 0 and a unitPrice." }
+{ "message": "type must be one of: dine_in, takeaway, delivery" }</code></pre></div>
+          </div>
+        </article>
+
+        <article class="endpoint" id="get-orders">
+          <div class="ep-head">
+            <span class="method get">GET</span>
+            <span class="path">/orders</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">List orders for the dashboard board. Filter, sort and paginate with query parameters.</p>
+            <span class="clabel">Query parameters</span>
+            <div class="twrap"><table>
+              <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td><code>status</code></td><td>OrderStatus</td><td>e.g. <code>status=pending</code>.</td></tr>
+                <tr><td><code>type</code></td><td>OrderType</td><td>e.g. <code>type=delivery</code>.</td></tr>
+                <tr><td><code>_sort</code>&nbsp;/&nbsp;<code>_order</code></td><td>string</td><td>Newest first: <code>_sort=createdAt&amp;_order=desc</code>.</td></tr>
+                <tr><td><code>_page</code>&nbsp;/&nbsp;<code>_limit</code></td><td>number</td><td>Pagination (with <code>X-Total-Count</code> header).</td></tr>
+              </tbody>
+            </table></div>
+            <span class="clabel">Example request</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>GET /orders?status=pending&amp;_sort=createdAt&amp;_order=desc&amp;_page=1&amp;_limit=20</code></pre></div>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>[
+  {
+    "id": 2, "number": 1043, "status": "pending", "type": "takeaway",
+    "table": null, "customer": null,
+    "items": [
+      { "productId": 5, "name": "Ta3meya Sandwich", "qty": 3, "unitPrice": 10,
+        "modifiers": [ { "name": "Shatta (spicy)", "price": 0 } ], "lineTotal": 30 },
+      { "productId": 13, "name": "Mint Tea", "qty": 2, "unitPrice": 10, "modifiers": [], "lineTotal": 20 }
+    ],
+    "subtotal": 50, "tax": 7, "total": 57,
+    "notes": "", "createdAt": "2026-07-04T07:32:00.000Z"
+  }
+]</code></pre></div>
+          </div>
+        </article>
+
+        <article class="endpoint" id="get-order">
+          <div class="ep-head">
+            <span class="method get">GET</span>
+            <span class="path">/orders/:id</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">A single order with all its items. Returns <span class="inline">404</span> if not found.</p>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "id": 1, "number": 1042, "status": "preparing", "type": "dine_in",
+  "table": 4, "customer": null,
+  "items": [
+    { "productId": 1, "name": "Foul Eskandarani", "qty": 2, "unitPrice": 25,
+      "modifiers": [ { "name": "Extra tahini", "price": 5 } ], "lineTotal": 60 },
+    { "productId": 12, "name": "Tea", "qty": 1, "unitPrice": 8, "modifiers": [], "lineTotal": 8 }
+  ],
+  "subtotal": 68, "tax": 9.52, "total": 77.52,
+  "notes": "Table by the window.", "createdAt": "2026-07-04T07:15:00.000Z"
+}</code></pre></div>
+          </div>
+        </article>
+
+        <article class="endpoint" id="patch-order">
+          <div class="ep-head">
+            <span class="method patch">PATCH</span>
+            <span class="path">/orders/:id</span>
+            <span class="auth-chip">Auth: <b>bearer</b></span>
+          </div>
+          <div class="ep-body">
+            <p class="ep-desc">Advance an order's status (or cancel it). This is what the dashboard's status buttons call — a good place for an optimistic UI update.</p>
+            <span class="clabel">Request body</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{ "status": "preparing" }</code></pre></div>
+            <span class="clabel">200 · Response</span>
+            <div class="code"><button class="copy">Copy</button><pre><code>{
+  "id": 2, "number": 1043, "status": "preparing", "type": "takeaway",
+  "items": [ /* … */ ],
+  "subtotal": 50, "tax": 7, "total": 57,
+  "createdAt": "2026-07-04T07:32:00.000Z"
+}</code></pre></div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ERRORS -->
+      <section id="errors">
+        <h2>Errors</h2>
+        <p>All errors return JSON with a <span class="inline">message</span>. Handle these states in the UI.</p>
+        <div class="twrap"><table>
+          <thead><tr><th>Status</th><th>When</th><th>Body</th></tr></thead>
+          <tbody>
+            <tr><td><code>400</code></td><td>Invalid order payload (no items, bad qty, invalid type)</td><td><code>{ "message": "…" }</code></td></tr>
+            <tr><td><code>401</code></td><td>Missing/invalid bearer token, or bad login</td><td><code>{ "message": "Unauthorized — missing or invalid token" }</code></td></tr>
+            <tr><td><code>404</code></td><td>Resource id doesn't exist</td><td><code>{}</code></td></tr>
+            <tr><td><code>500</code></td><td>Injected failure when <code>FAIL_RATE &gt; 0</code> (writes only)</td><td><code>{ "message": "Something went wrong. Please try again." }</code></td></tr>
+          </tbody>
+        </table></div>
+        <div class="note">Set <span class="inline">FAIL_RATE=0.1</span> when starting the server to make ~10% of writes fail, so you can build and test retry / error UX.</div>
+      </section>
+
+      <!-- CONFIG -->
+      <section id="config">
+        <h2>Configuration</h2>
+        <p>Behaviour is controlled by environment variables when starting the server.</p>
+        <div class="twrap"><table>
+          <thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>PORT</code></td><td><code>4000</code></td><td>Port to listen on.</td></tr>
+            <tr><td><code>TAX_RATE</code></td><td><code>0.14</code></td><td>VAT applied to order subtotals.</td></tr>
+            <tr><td><code>LATENCY_MIN_MS</code> / <code>LATENCY_MAX_MS</code></td><td><code>150</code> / <code>550</code></td><td>Artificial latency range.</td></tr>
+            <tr><td><code>FAIL_RATE</code></td><td><code>0</code></td><td>Probability (0–1) a write returns 500.</td></tr>
+            <tr><td><code>API_URL</code> / <code>INTERVAL_MS</code></td><td><code>localhost:4000</code> / <code>20000</code></td><td>Used by the order-injector script.</td></tr>
+          </tbody>
+        </table></div>
+        <span class="clabel">Run</span>
+        <div class="code"><button class="copy">Copy</button><pre><code>npm install
+npm start              # http://localhost:4000
+FAIL_RATE=0.1 npm start   # with injected failures
+npm run inject         # (2nd terminal) a new order every ~20s</code></pre></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.code').forEach(function (block) {
+    var btn = block.querySelector('.copy');
+    var code = block.querySelector('code');
+    if (!btn || !code) return;
+    btn.addEventListener('click', function () {
+      navigator.clipboard.writeText(code.textContent).then(function () {
+        btn.textContent = 'Copied';
+        btn.classList.add('done');
+        setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1400);
+      });
+    });
+  });
+
+  // Scroll-spy: highlight the nav link for the section / endpoint in view
+  var links = Array.prototype.slice.call(document.querySelectorAll('.sidebar a.navlink'));
+  var byHash = {};
+  links.forEach(function (l) { byHash[l.getAttribute('href')] = l; });
+  var targets = links.map(function (l) { return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var link = byHash['#' + e.target.id];
+        if (!link) return;
+        links.forEach(function (l) { l.classList.remove('active'); });
+        link.classList.add('active');
+        link.scrollIntoView({ block: 'nearest' });
+      }
+    });
+  }, { rootMargin: '0px 0px -75% 0px', threshold: 0 });
+  targets.forEach(function (t) { spy.observe(t); });
+
+  // Endpoint filter
+  var filter = document.getElementById('filter');
+  filter.addEventListener('input', function () {
+    var q = filter.value.trim().toLowerCase();
+    document.querySelectorAll('.sidebar a.navlink[data-ep]').forEach(function (l) {
+      var show = l.textContent.toLowerCase().indexOf(q) !== -1;
+      l.style.display = show ? '' : 'none';
+    });
+  });
+
+  // Mobile sidebar toggle
+  var sidebar = document.getElementById('sidebar');
+  var menuBtn = document.getElementById('menuBtn');
+  if (menuBtn) menuBtn.addEventListener('click', function () { sidebar.classList.toggle('open'); });
+  document.querySelectorAll('.sidebar a.navlink').forEach(function (l) {
+    l.addEventListener('click', function () { if (window.innerWidth <= 860) sidebar.classList.remove('open'); });
+  });
+</script>

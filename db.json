@@ -1,0 +1,308 @@
+{
+  "users": [
+    { "id": 1, "name": "Sara Adel", "email": "cashier@foolix.test", "role": "cashier" },
+    { "id": 2, "name": "Omar Hany", "email": "admin@foolix.test", "role": "admin" }
+  ],
+  "categories": [
+    { "id": 1, "name": "Foul", "nameAr": "فول", "sortOrder": 1 },
+    { "id": 2, "name": "Ta3meya", "nameAr": "طعمية", "sortOrder": 2 },
+    { "id": 3, "name": "Sandwiches", "nameAr": "ساندويتشات", "sortOrder": 3 },
+    { "id": 4, "name": "Egg Dishes", "nameAr": "أطباق البيض", "sortOrder": 4 },
+    { "id": 5, "name": "Sides & Salads", "nameAr": "أطباق جانبية وسلطات", "sortOrder": 5 },
+    { "id": 6, "name": "Drinks", "nameAr": "مشروبات", "sortOrder": 6 }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Foul Eskandarani",
+      "nameAr": "فول اسكندراني",
+      "description": "Alexandrian-style foul simmered with tomato, garlic and cumin.",
+      "price": 25,
+      "categoryId": 1,
+      "imageUrl": "https://picsum.photos/seed/foul-eskandarani/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 1, "name": "Extra tahini", "price": 5 },
+        { "id": 2, "name": "Add egg", "price": 8 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 },
+        { "id": 5, "name": "No onions", "price": 0 }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Foul with Tahini",
+      "nameAr": "فول بالطحينة",
+      "description": "Classic foul topped with a generous swirl of tahini.",
+      "price": 18,
+      "categoryId": 1,
+      "imageUrl": "https://picsum.photos/seed/foul-tahini/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 1, "name": "Extra tahini", "price": 5 },
+        { "id": 2, "name": "Add egg", "price": 8 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Plain Foul",
+      "nameAr": "فول سادة",
+      "description": "Simple, hearty foul with oil, lemon and cumin.",
+      "price": 15,
+      "categoryId": 1,
+      "imageUrl": "https://picsum.photos/seed/plain-foul/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 1, "name": "Extra tahini", "price": 5 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 },
+        { "id": 5, "name": "No onions", "price": 0 }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Ta3meya — 5 pieces",
+      "nameAr": "طعمية - ٥ قطع",
+      "description": "Crispy Egyptian falafel made with fava beans and herbs.",
+      "price": 20,
+      "categoryId": 2,
+      "imageUrl": "https://picsum.photos/seed/ta3meya-plate/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 3, "name": "Extra piece", "price": 4 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 },
+        { "id": 5, "name": "No onions", "price": 0 }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Ta3meya Sandwich",
+      "nameAr": "ساندويتش طعمية",
+      "description": "Baladi bread stuffed with ta3meya, salad and tahini.",
+      "price": 10,
+      "categoryId": 3,
+      "imageUrl": "https://picsum.photos/seed/ta3meya-sandwich/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 2, "name": "Add egg", "price": 8 },
+        { "id": 1, "name": "Extra tahini", "price": 5 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Foul Sandwich",
+      "nameAr": "ساندويتش فول",
+      "description": "Warm baladi bread filled with foul and a drizzle of tahini.",
+      "price": 10,
+      "categoryId": 3,
+      "imageUrl": "https://picsum.photos/seed/foul-sandwich/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 2, "name": "Add egg", "price": 8 },
+        { "id": 1, "name": "Extra tahini", "price": 5 },
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Eggs with Basterma",
+      "nameAr": "بيض بالبسطرمة",
+      "description": "Pan-fried eggs with spiced cured basterma.",
+      "price": 35,
+      "categoryId": 4,
+      "imageUrl": "https://picsum.photos/seed/eggs-basterma/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Fried Eggs",
+      "nameAr": "بيض مقلي",
+      "description": "Two eggs fried in butter, served sizzling.",
+      "price": 20,
+      "categoryId": 4,
+      "imageUrl": "https://picsum.photos/seed/fried-eggs/400/300",
+      "available": false,
+      "modifiers": [
+        { "id": 4, "name": "Shatta (spicy)", "price": 0 }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Baba Ghanoush",
+      "nameAr": "بابا غنوج",
+      "description": "Smoky mashed eggplant with tahini and garlic.",
+      "price": 15,
+      "categoryId": 5,
+      "imageUrl": "https://picsum.photos/seed/baba-ghanoush/400/300",
+      "available": true,
+      "modifiers": []
+    },
+    {
+      "id": 10,
+      "name": "Tahini Salad",
+      "nameAr": "سلطة طحينة",
+      "description": "Creamy tahini blended with lemon and parsley.",
+      "price": 12,
+      "categoryId": 5,
+      "imageUrl": "https://picsum.photos/seed/tahini-salad/400/300",
+      "available": true,
+      "modifiers": []
+    },
+    {
+      "id": 11,
+      "name": "Torshi (Pickles)",
+      "nameAr": "طرشي",
+      "description": "House-pickled vegetables.",
+      "price": 5,
+      "categoryId": 5,
+      "imageUrl": "https://picsum.photos/seed/torshi/400/300",
+      "available": true,
+      "modifiers": []
+    },
+    {
+      "id": 12,
+      "name": "Tea",
+      "nameAr": "شاي",
+      "description": "Egyptian black tea.",
+      "price": 8,
+      "categoryId": 6,
+      "imageUrl": "https://picsum.photos/seed/tea/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 6, "name": "Extra sugar", "price": 0 }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Mint Tea",
+      "nameAr": "شاي بالنعناع",
+      "description": "Black tea with fresh mint.",
+      "price": 10,
+      "categoryId": 6,
+      "imageUrl": "https://picsum.photos/seed/mint-tea/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 6, "name": "Extra sugar", "price": 0 }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Sahlab",
+      "nameAr": "سحلب",
+      "description": "Warm creamy sahlab topped with nuts and cinnamon.",
+      "price": 20,
+      "categoryId": 6,
+      "imageUrl": "https://picsum.photos/seed/sahlab/400/300",
+      "available": true,
+      "modifiers": [
+        { "id": 7, "name": "Extra nuts", "price": 6 }
+      ]
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "number": 1042,
+      "status": "preparing",
+      "type": "dine_in",
+      "table": 4,
+      "customer": null,
+      "items": [
+        { "productId": 1, "name": "Foul Eskandarani", "qty": 2, "unitPrice": 25, "modifiers": [{ "name": "Extra tahini", "price": 5 }], "lineTotal": 60 },
+        { "productId": 12, "name": "Tea", "qty": 1, "unitPrice": 8, "modifiers": [], "lineTotal": 8 }
+      ],
+      "subtotal": 68,
+      "tax": 9.52,
+      "total": 77.52,
+      "notes": "Table by the window.",
+      "createdAt": "2026-07-04T07:15:00.000Z"
+    },
+    {
+      "id": 2,
+      "number": 1043,
+      "status": "pending",
+      "type": "takeaway",
+      "table": null,
+      "customer": null,
+      "items": [
+        { "productId": 5, "name": "Ta3meya Sandwich", "qty": 3, "unitPrice": 10, "modifiers": [{ "name": "Shatta (spicy)", "price": 0 }], "lineTotal": 30 },
+        { "productId": 13, "name": "Mint Tea", "qty": 2, "unitPrice": 10, "modifiers": [], "lineTotal": 20 }
+      ],
+      "subtotal": 50,
+      "tax": 7,
+      "total": 57,
+      "notes": "",
+      "createdAt": "2026-07-04T07:32:00.000Z"
+    },
+    {
+      "id": 3,
+      "number": 1044,
+      "status": "ready",
+      "type": "delivery",
+      "table": null,
+      "customer": { "name": "Nadia M.", "phone": "0100-123-4567", "address": "12 El Nasr St, Cairo" },
+      "items": [
+        { "productId": 7, "name": "Eggs with Basterma", "qty": 1, "unitPrice": 35, "modifiers": [], "lineTotal": 35 },
+        { "productId": 2, "name": "Foul with Tahini", "qty": 1, "unitPrice": 18, "modifiers": [], "lineTotal": 18 }
+      ],
+      "subtotal": 53,
+      "tax": 7.42,
+      "total": 60.42,
+      "notes": "Ring the bell twice.",
+      "createdAt": "2026-07-04T07:40:00.000Z"
+    },
+    {
+      "id": 4,
+      "number": 1045,
+      "status": "completed",
+      "type": "dine_in",
+      "table": 2,
+      "customer": null,
+      "items": [
+        { "productId": 14, "name": "Sahlab", "qty": 2, "unitPrice": 20, "modifiers": [{ "name": "Extra nuts", "price": 6 }], "lineTotal": 52 }
+      ],
+      "subtotal": 52,
+      "tax": 7.28,
+      "total": 59.28,
+      "notes": "",
+      "createdAt": "2026-07-04T06:50:00.000Z"
+    },
+    {
+      "id": 5,
+      "number": 1046,
+      "status": "cancelled",
+      "type": "takeaway",
+      "table": null,
+      "customer": null,
+      "items": [
+        { "productId": 3, "name": "Plain Foul", "qty": 1, "unitPrice": 15, "modifiers": [], "lineTotal": 15 },
+        { "productId": 11, "name": "Torshi (Pickles)", "qty": 1, "unitPrice": 5, "modifiers": [], "lineTotal": 5 }
+      ],
+      "subtotal": 20,
+      "tax": 2.8,
+      "total": 22.8,
+      "notes": "Customer left.",
+      "createdAt": "2026-07-04T06:20:00.000Z"
+    },
+    {
+      "id": 6,
+      "number": 1047,
+      "status": "pending",
+      "type": "dine_in",
+      "table": 6,
+      "customer": null,
+      "items": [
+        { "productId": 6, "name": "Foul Sandwich", "qty": 2, "unitPrice": 10, "modifiers": [{ "name": "Add egg", "price": 8 }], "lineTotal": 36 },
+        { "productId": 9, "name": "Baba Ghanoush", "qty": 1, "unitPrice": 15, "modifiers": [], "lineTotal": 15 }
+      ],
+      "subtotal": 51,
+      "tax": 7.14,
+      "total": 58.14,
+      "notes": "",
+      "createdAt": "2026-07-04T08:05:00.000Z"
+    }
+  ]
+}

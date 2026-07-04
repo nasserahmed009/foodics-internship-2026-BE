@@ -1,0 +1,17 @@
+{
+  "name": "foolix-mock-api",
+  "version": "1.0.0",
+  "description": "Mock backend for the Foolix FE internship project (foul & ta3meya ordering platform).",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "mock": "node server.js",
+    "inject": "node scripts/inject-orders.js"
+  },
+  "dependencies": {
+    "json-server": "^0.17.4"
+  }
+}
