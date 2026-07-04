@@ -25,14 +25,26 @@ const FAIL_RATE = Number(process.env.FAIL_RATE ?? 0) // e.g. 0.1 -> ~10% of writ
 
 const round = (n) => Math.round(n * 100) / 100
 
-server.use(middlewares)
-server.use(jsonServer.bodyParser)
-
-// 0) Health check — no auth, no latency. Used by Render's health check and by
-//    uptime pingers to keep the free instance warm.
+// 0) Health check + docs site — registered BEFORE json-server's middleware so
+//    they take precedence over json-server's built-in welcome page. No auth,
+//    no latency. Only these specific files are exposed (never server.js /
+//    db.json); they live at the repo root so GitHub Pages can also serve them
+//    from `/`.
 server.get('/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime() })
 })
+const DOCS_FILES = {
+  '/': 'index.html',
+  '/index.html': 'index.html',
+  '/api-reference.html': 'api-reference.html',
+  '/favicon.svg': 'favicon.svg',
+}
+Object.entries(DOCS_FILES).forEach(([route, file]) => {
+  server.get(route, (req, res) => res.sendFile(path.join(__dirname, file)))
+})
+
+server.use(middlewares)
+server.use(jsonServer.bodyParser)
 
 // 1) Artificial latency on every request ------------------------------------
 server.use((req, res, next) => {
